@@ -60,6 +60,8 @@ fastapi-calculator/
 │  
 └── .github/workflows/  
     └── ci.yml  
+    
+pgAdmin is configured via Docker Compose using environment variables and is accessible at http://localhost:5050.
 
 ## Author
 
