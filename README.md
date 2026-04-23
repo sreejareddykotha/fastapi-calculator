@@ -9,11 +9,10 @@ A simple calculator web application built using FastAPI. It supports basic arith
 - Addition, Subtraction, Multiplication, Division  
 - Interactive web interface (HTML + JavaScript)  
 - REST API endpoints  
+- User authentication (register & login)
+- Calculation CRUD operations
 - Logging for operations and errors  
-- Automated testing:
-  - Unit tests  
-  - Integration tests  
-  - End-to-end tests (Playwright)  
+- Automated testing (unit, integration, end-to-end)
 - Continuous Integration with GitHub Actions  
 
 ---
@@ -36,6 +35,27 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 pytest
 ```
+
+## API Endpoints
+
+### User
+- POST /users/register
+- POST /users/login
+
+### Calculations
+- GET /calculations
+- GET /calculations/{id}
+- POST /calculations
+- PUT /calculations/{id}
+- DELETE /calculations/{id}
+
+## OpenAPI Docs
+http://127.0.0.1:8000/docs
+
+CI/CD
+
+GitHub Actions automatically runs tests and builds a Docker image on every push.
+If tests pass, the image is pushed to Docker Hub.
 
 ## Docker Image
 https://hub.docker.com/r/sreejareddykotha/fastapi-calculator
