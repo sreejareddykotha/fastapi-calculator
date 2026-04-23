@@ -1,8 +1,14 @@
 import logging
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+
 from operations import add, subtract, multiply, divide
+from database import SessionLocal, engine
+from models import Base, User
+from schemas import UserCreate, UserRead
+from security import hash_password
 
 logging.basicConfig(
     level=logging.INFO,
@@ -13,6 +19,16 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -51,3 +67,25 @@ def divide_numbers(a: float, b: float):
     except ZeroDivisionError:
         logger.error(f"Division by zero attempted: {a} / {b}")
         raise HTTPException(status_code=400, detail="Cannot divide by zero")
+
+
+@app.post("/users", response_model=UserRead)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    existing_username = db.query(User).filter(User.username == user.username).first()
+    if existing_username:
+        raise HTTPException(status_code=400, detail="Username already exists")
+
+    existing_email = db.query(User).filter(User.email == user.email).first()
+    if existing_email:
+        raise HTTPException(status_code=400, detail="Email already exists")
+
+    new_user = User(
+        username=user.username,
+        email=user.email,
+        password_hash=hash_password(user.password)
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
