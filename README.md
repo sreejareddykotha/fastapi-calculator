@@ -63,6 +63,26 @@ https://hub.docker.com/r/sreejareddykotha/fastapi-calculator
 ## Tests
 The test suite now includes calculation model, schema validation, factory logic, user integration, and calculator end-to-end tests.
 
+## Front-End Pages
+- /register
+- /login
+
+## Run Front-End Locally
+
+```bash
+uvicorn main:app --reload
+```
+
+Open:
+http://127.0.0.1:8000/register
+http://127.0.0.1:8000/login
+
+## Run Playwright E2E Tests
+
+```bash
+pytest e2e/test_auth_ui.py
+```
+
 AUTHOR
 Sreeja Reddy Kotha
  
