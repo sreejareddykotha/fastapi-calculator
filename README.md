@@ -40,6 +40,7 @@ pytest
 ## Docker Image
 https://hub.docker.com/r/sreejareddykotha/fastapi-calculator
 
+## Tests
 The test suite now includes calculation model, schema validation, factory logic, user integration, and calculator end-to-end tests.
 
 AUTHOR
