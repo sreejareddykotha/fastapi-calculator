@@ -6,9 +6,10 @@ from sqlalchemy.orm import Session
 
 from operations import add, subtract, multiply, divide
 from database import SessionLocal, engine
-from models import Base, User
-from schemas import UserCreate, UserRead
+from models import Base, User, Calculation
+from schemas import UserCreate, UserRead, CalculationCreate, CalculationRead
 from security import hash_password
+from calculation_factory import CalculationFactory
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,6 +30,22 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def create_calculation(calc: CalculationCreate, db: Session) -> Calculation:
+    result = CalculationFactory.calculate(calc.a, calc.b, calc.type)
+
+    new_calc = Calculation(
+        a=calc.a,
+        b=calc.b,
+        type=calc.type,
+        result=result
+    )
+
+    db.add(new_calc)
+    db.commit()
+    db.refresh(new_calc)
+    return new_calc
 
 
 @app.get("/", response_class=HTMLResponse)
