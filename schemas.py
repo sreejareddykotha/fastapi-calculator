@@ -3,10 +3,19 @@ from typing import Literal
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_validator
 
 
+# ----------------------
+# USER SCHEMAS
+# ----------------------
+
 class UserCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=6)
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
 class UserRead(BaseModel):
@@ -18,10 +27,14 @@ class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+# ----------------------
+# CALCULATION SCHEMAS
+# ----------------------
+
 class CalculationCreate(BaseModel):
     a: float
     b: float
-    type: Literal["Add", "Sub", "Multiply", "Divide"]
+    type: Literal["Add", "Subtract", "Multiply", "Divide"]
 
     @field_validator("b")
     @classmethod
