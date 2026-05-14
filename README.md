@@ -15,6 +15,14 @@ A simple calculator web application built using FastAPI. It supports basic arith
 - Automated testing (unit, integration, end-to-end)
 - Continuous Integration with GitHub Actions  
 
+Advanced Features
+
+Power operation
+Modulus operation
+Full frontend integration for advanced calculations
+Unit, integration, and Playwright E2E tests for advanced operations
+
+
 ---
 
 ## Tech Stack
@@ -62,6 +70,16 @@ https://hub.docker.com/r/sreejareddykotha/fastapi-calculator
 
 ## Tests
 The test suite now includes calculation model, schema validation, factory logic, user integration, and calculator end-to-end tests.
+
+Additional Feature Testing
+
+The application includes testing for:
+
+* Power calculations
+* Modulus calculations
+* Advanced calculation factory logic
+* Frontend advanced operation workflows
+
 
 ## Front-End Pages
 - /register
