@@ -1,30 +1,34 @@
-import logging
-
-logger = logging.getLogger(__name__)
-
-
 def add(a, b):
-    result = a + b
-    logger.info(f"add({a}, {b}) = {result}")
-    return result
+    return a + b
 
 
 def subtract(a, b):
-    result = a - b
-    logger.info(f"subtract({a}, {b}) = {result}")
-    return result
+    return a - b
 
 
 def multiply(a, b):
-    result = a * b
-    logger.info(f"multiply({a}, {b}) = {result}")
-    return result
+    return a * b
 
 
 def divide(a, b):
+
     if b == 0:
-        logger.error("divide() called with b = 0")
-        raise ZeroDivisionError("Cannot divide by zero")
-    result = a / b
-    logger.info(f"divide({a}, {b}) = {result}")
-    return result
+        raise ZeroDivisionError(
+            "Cannot divide by zero"
+        )
+
+    return a / b
+
+
+def power(a, b):
+    return a ** b
+
+
+def modulus(a, b):
+
+    if b == 0:
+        raise ZeroDivisionError(
+            "Cannot modulus by zero"
+        )
+
+    return a % b

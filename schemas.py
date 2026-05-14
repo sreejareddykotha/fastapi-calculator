@@ -55,11 +55,13 @@ class CalculationCreate(BaseModel):
     b: float
 
     type: Literal[
-        "Add",
-        "Sub",
-        "Multiply",
-        "Divide"
-    ]
+    "Add",
+    "Subtract",
+    "Multiply",
+    "Divide",
+    "Power",
+    "Modulus"
+]
 
     @field_validator("b")
     @classmethod

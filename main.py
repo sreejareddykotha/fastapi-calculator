@@ -5,9 +5,18 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-from operations import add, subtract, multiply, divide
+from operations import (
+    add,
+    subtract,
+    multiply,
+    divide,
+    power,
+    modulus
+)
+
 from database import SessionLocal, engine
 from models import Base, User, Calculation
+
 from schemas import (
     UserCreate,
     UserRead,
@@ -15,12 +24,15 @@ from schemas import (
     CalculationCreate,
     CalculationRead
 )
+
 from security import (
     hash_password,
     verify_password,
     create_access_token
 )
+
 from calculation_factory import CalculationFactory
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,23 +43,34 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# Static folder
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static"
+)
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(
+    directory="templates"
+)
 
 Base.metadata.create_all(bind=engine)
 
 
 def get_db():
+
     db = SessionLocal()
+
     try:
         yield db
+
     finally:
         db.close()
 
 
-def create_calculation(calc: CalculationCreate, db: Session) -> Calculation:
+def create_calculation(
+    calc: CalculationCreate,
+    db: Session
+) -> Calculation:
 
     result = CalculationFactory.calculate(
         calc.a,
@@ -75,8 +98,8 @@ def create_calculation(calc: CalculationCreate, db: Session) -> Calculation:
 def read_root(request: Request):
 
     return templates.TemplateResponse(
-        request,
-        "index.html"
+        request=request,
+        name="index.html"
     )
 
 
@@ -86,8 +109,8 @@ def read_root(request: Request):
 def register_page(request: Request):
 
     return templates.TemplateResponse(
-        request,
-        "register.html"
+        request=request,
+        name="register.html"
     )
 
 
@@ -97,8 +120,8 @@ def register_page(request: Request):
 def login_page(request: Request):
 
     return templates.TemplateResponse(
-        request,
-        "login.html"
+        request=request,
+        name="login.html"
     )
 
 
@@ -108,8 +131,8 @@ def login_page(request: Request):
 def calculations_page(request: Request):
 
     return templates.TemplateResponse(
-        request,
-        "calculations.html"
+        request=request,
+        name="calculations.html"
     )
 
 
@@ -149,6 +172,7 @@ def multiply_numbers(a: float, b: float):
 def divide_numbers(a: float, b: float):
 
     try:
+
         result = divide(a, b)
 
         logger.info(f"Division: {a} / {b} = {result}")
@@ -157,7 +181,9 @@ def divide_numbers(a: float, b: float):
 
     except ZeroDivisionError:
 
-        logger.error(f"Division by zero attempted: {a} / {b}")
+        logger.error(
+            f"Division by zero attempted: {a} / {b}"
+        )
 
         raise HTTPException(
             status_code=400,
@@ -256,7 +282,10 @@ def login_user(
 
 # ---------------- CALCULATION ROUTES ---------------- #
 
-@app.post("/calculations", response_model=CalculationRead)
+@app.post(
+    "/calculations",
+    response_model=CalculationRead
+)
 def add_calculation(
     calc: CalculationCreate,
     db: Session = Depends(get_db)
@@ -267,17 +296,25 @@ def add_calculation(
     return new_calc
 
 
-@app.get("/calculations", response_model=list[CalculationRead])
+@app.get(
+    "/calculations",
+    response_model=list[CalculationRead]
+)
 def get_calculations(
     db: Session = Depends(get_db)
 ):
 
-    calculations = db.query(Calculation).all()
+    calculations = db.query(
+        Calculation
+    ).all()
 
     return calculations
 
 
-@app.get("/calculations/{calc_id}", response_model=CalculationRead)
+@app.get(
+    "/calculations/{calc_id}",
+    response_model=CalculationRead
+)
 def get_calculation(
     calc_id: int,
     db: Session = Depends(get_db)
@@ -297,7 +334,10 @@ def get_calculation(
     return calc
 
 
-@app.put("/calculations/{calc_id}", response_model=CalculationRead)
+@app.put(
+    "/calculations/{calc_id}",
+    response_model=CalculationRead
+)
 def update_calculation(
     calc_id: int,
     updated_calc: CalculationCreate,

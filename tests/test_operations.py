@@ -1,22 +1,54 @@
-import sys
-import os
+import pytest
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
-from operations import add, subtract, multiply, divide
+from operations import (
+    add,
+    subtract,
+    multiply,
+    divide,
+    power,
+    modulus
+)
 
 
 def test_add():
+
     assert add(2, 3) == 5
 
 
 def test_subtract():
-    assert subtract(5, 2) == 3
+
+    assert subtract(10, 4) == 6
 
 
 def test_multiply():
-    assert multiply(4, 3) == 12
+
+    assert multiply(5, 2) == 10
 
 
 def test_divide():
-    assert divide(10, 2) == 5
+
+    assert divide(20, 5) == 4
+
+
+def test_divide_by_zero():
+
+    with pytest.raises(ZeroDivisionError):
+
+        divide(10, 0)
+
+
+def test_power():
+
+    assert power(2, 3) == 8
+
+
+def test_modulus():
+
+    assert modulus(10, 3) == 1
+
+
+def test_modulus_by_zero():
+
+    with pytest.raises(ZeroDivisionError):
+
+        modulus(10, 0)

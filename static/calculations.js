@@ -1,14 +1,20 @@
+const form = document.getElementById("calc-form");
+const calculationsList = document.getElementById("calculations-list");
+
+
 async function loadCalculations() {
+
     const response = await fetch("/calculations");
+
     const calculations = await response.json();
 
-    const calculationsList = document.getElementById("calculations-list");
     calculationsList.innerHTML = "";
 
     calculations.forEach(calc => {
-        const item = document.createElement("li");
 
-        item.innerHTML = `
+        const li = document.createElement("li");
+
+        li.innerHTML = `
             ${calc.a} ${calc.type} ${calc.b} = ${calc.result}
 
             <button onclick="deleteCalculation(${calc.id})">
@@ -25,71 +31,116 @@ async function loadCalculations() {
             </button>
         `;
 
-        calculationsList.appendChild(item);
+        calculationsList.appendChild(li);
     });
 }
 
-document.getElementById("calc-form").addEventListener("submit", async (e) => {
+
+form.addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
-    const a = document.getElementById("a").value;
-    const b = document.getElementById("b").value;
+    const a = parseFloat(
+        document.getElementById("a").value
+    );
+
+    const b = parseFloat(
+        document.getElementById("b").value
+    );
+
     const type = document.getElementById("type").value;
 
     const response = await fetch("/calculations", {
+
         method: "POST",
+
         headers: {
             "Content-Type": "application/json"
         },
+
         body: JSON.stringify({
-            a: parseFloat(a),
-            b: parseFloat(b),
+            a: a,
+            b: b,
             type: type
         })
     });
 
     if (response.ok) {
+
         alert("Calculation created successfully");
-        document.getElementById("calc-form").reset();
+
         loadCalculations();
+
+        form.reset();
+
     } else {
+
         alert("Error creating calculation");
     }
 });
 
+
 async function deleteCalculation(id) {
-    const response = await fetch(`/calculations/${id}`, {
-        method: "DELETE"
-    });
+
+    const response = await fetch(
+        `/calculations/${id}`,
+        {
+            method: "DELETE"
+        }
+    );
 
     if (response.ok) {
+
         loadCalculations();
     }
 }
 
-async function editCalculation(id, oldA, oldB, oldType) {
-    const newA = prompt("Enter new A value", oldA);
-    const newB = prompt("Enter new B value", oldB);
+
+async function editCalculation(
+    id,
+    oldA,
+    oldB,
+    oldType
+) {
+
+    const newA = prompt(
+        "Enter new first number",
+        oldA
+    );
+
+    const newB = prompt(
+        "Enter new second number",
+        oldB
+    );
+
     const newType = prompt(
-        "Enter operation: Add, Sub, Multiply, Divide",
+        "Enter new type",
         oldType
     );
 
-    const response = await fetch(`/calculations/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            a: parseFloat(newA),
-            b: parseFloat(newB),
-            type: newType
-        })
-    });
+    const response = await fetch(
+        `/calculations/${id}`,
+        {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                a: parseFloat(newA),
+                b: parseFloat(newB),
+                type: newType
+            })
+        }
+    );
 
     if (response.ok) {
+
         loadCalculations();
     }
 }
+
 
 loadCalculations();

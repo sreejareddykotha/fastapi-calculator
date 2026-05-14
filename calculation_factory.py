@@ -1,15 +1,32 @@
+from operations import (
+    add,
+    subtract,
+    multiply,
+    divide,
+    power,
+    modulus
+)
+
+
 class CalculationFactory:
+
     @staticmethod
-    def calculate(a: float, b: float, calculation_type: str) -> float:
-        if calculation_type == "Add":
-            return a + b
-        elif calculation_type == "Sub":
-            return a - b
-        elif calculation_type == "Multiply":
-            return a * b
-        elif calculation_type == "Divide":
-            if b == 0:
-                raise ValueError("Division by zero is not allowed")
-            return a / b
-        else:
-            raise ValueError("Invalid calculation type")
+    def calculate(a, b, calculation_type):
+
+        operations = {
+            "Add": add,
+            "Subtract": subtract,
+            "Multiply": multiply,
+            "Divide": divide,
+            "Power": power,
+            "Modulus": modulus
+        }
+
+        if calculation_type not in operations:
+
+            raise ValueError(
+                f"Invalid calculation type: {calculation_type}"
+            )
+
+        return operations[calculation_type](a, b)
+    
