@@ -48,6 +48,7 @@ def get_db():
 
 
 def create_calculation(calc: CalculationCreate, db: Session) -> Calculation:
+
     result = CalculationFactory.calculate(
         calc.a,
         calc.b,
@@ -72,6 +73,7 @@ def create_calculation(calc: CalculationCreate, db: Session) -> Calculation:
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
+
     return templates.TemplateResponse(
         request,
         "index.html"
@@ -82,6 +84,7 @@ def read_root(request: Request):
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
+
     return templates.TemplateResponse(
         request,
         "register.html"
@@ -92,6 +95,7 @@ def register_page(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
+
     return templates.TemplateResponse(
         request,
         "login.html"
@@ -102,6 +106,7 @@ def login_page(request: Request):
 
 @app.get("/calculations-page", response_class=HTMLResponse)
 def calculations_page(request: Request):
+
     return templates.TemplateResponse(
         request,
         "calculations.html"
@@ -112,6 +117,7 @@ def calculations_page(request: Request):
 
 @app.get("/add")
 def add_numbers(a: float, b: float):
+
     result = add(a, b)
 
     logger.info(f"Addition: {a} + {b} = {result}")
@@ -121,6 +127,7 @@ def add_numbers(a: float, b: float):
 
 @app.get("/subtract")
 def subtract_numbers(a: float, b: float):
+
     result = subtract(a, b)
 
     logger.info(f"Subtraction: {a} - {b} = {result}")
@@ -130,6 +137,7 @@ def subtract_numbers(a: float, b: float):
 
 @app.get("/multiply")
 def multiply_numbers(a: float, b: float):
+
     result = multiply(a, b)
 
     logger.info(f"Multiplication: {a} * {b} = {result}")
@@ -139,6 +147,7 @@ def multiply_numbers(a: float, b: float):
 
 @app.get("/divide")
 def divide_numbers(a: float, b: float):
+
     try:
         result = divide(a, b)
 
@@ -147,6 +156,7 @@ def divide_numbers(a: float, b: float):
         return {"result": result}
 
     except ZeroDivisionError:
+
         logger.error(f"Division by zero attempted: {a} / {b}")
 
         raise HTTPException(
@@ -162,11 +172,13 @@ def register_user(
     user: UserCreate,
     db: Session = Depends(get_db)
 ):
+
     existing_username = db.query(User).filter(
         User.username == user.username
     ).first()
 
     if existing_username:
+
         raise HTTPException(
             status_code=400,
             detail="Username already exists"
@@ -177,6 +189,7 @@ def register_user(
     ).first()
 
     if existing_email:
+
         raise HTTPException(
             status_code=400,
             detail="Email already exists"
@@ -195,11 +208,12 @@ def register_user(
     return new_user
 
 
-@app.post("/users")
+@app.post("/users", response_model=UserRead)
 def create_user(
     user: UserCreate,
     db: Session = Depends(get_db)
 ):
+
     return register_user(user, db)
 
 
@@ -208,11 +222,13 @@ def login_user(
     user: UserLogin,
     db: Session = Depends(get_db)
 ):
+
     db_user = db.query(User).filter(
         User.username == user.username
     ).first()
 
     if not db_user:
+
         raise HTTPException(
             status_code=401,
             detail="Invalid username or password"
@@ -222,6 +238,7 @@ def login_user(
         user.password,
         db_user.password_hash
     ):
+
         raise HTTPException(
             status_code=401,
             detail="Invalid username or password"
@@ -244,6 +261,7 @@ def add_calculation(
     calc: CalculationCreate,
     db: Session = Depends(get_db)
 ):
+
     new_calc = create_calculation(calc, db)
 
     return new_calc
@@ -253,6 +271,7 @@ def add_calculation(
 def get_calculations(
     db: Session = Depends(get_db)
 ):
+
     calculations = db.query(Calculation).all()
 
     return calculations
@@ -263,11 +282,13 @@ def get_calculation(
     calc_id: int,
     db: Session = Depends(get_db)
 ):
+
     calc = db.query(Calculation).filter(
         Calculation.id == calc_id
     ).first()
 
     if not calc:
+
         raise HTTPException(
             status_code=404,
             detail="Calculation not found"
@@ -282,11 +303,13 @@ def update_calculation(
     updated_calc: CalculationCreate,
     db: Session = Depends(get_db)
 ):
+
     calc = db.query(Calculation).filter(
         Calculation.id == calc_id
     ).first()
 
     if not calc:
+
         raise HTTPException(
             status_code=404,
             detail="Calculation not found"
@@ -313,11 +336,13 @@ def delete_calculation(
     calc_id: int,
     db: Session = Depends(get_db)
 ):
+
     calc = db.query(Calculation).filter(
         Calculation.id == calc_id
     ).first()
 
     if not calc:
+
         raise HTTPException(
             status_code=404,
             detail="Calculation not found"
