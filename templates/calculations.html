@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculations</title>
+</head>
+
+<body>
+
+    <h1>Calculator CRUD</h1>
+
+    <form id="calc-form">
+
+        <input
+            type="number"
+            id="a"
+            placeholder="First Number"
+            required
+        >
+
+        <input
+            type="number"
+            id="b"
+            placeholder="Second Number"
+            required
+        >
+
+        <select id="type">
+
+            <option value="Add">Add</option>
+
+            <option value="Sub">Subtract</option>
+
+            <option value="Multiply">Multiply</option>
+
+            <option value="Divide">Divide</option>
+
+        </select>
+
+        <button type="submit">
+            Create Calculation
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Calculations</h2>
+
+    <ul id="calculations-list"></ul>
+
+    <script src="/static/calculations.js"></script>
+
+</body>
+</html>
